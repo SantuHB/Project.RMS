@@ -1,0 +1,512 @@
+ public JsonResult Index()
+        {
+            // return Content("Index Content Result");
+
+            return Json(new {username="rock",emailId="rock@g.com" });
+        }
+
+DataView prodView = new DataView(prodDS.Tables["Products"],  
+   "UnitsInStock <= ReorderLevel",  
+   "SupplierID, ProductName",  
+   DataViewRowState.CurrentRows);  
+             DataView customerView = new DataView(dataResult,
+null,
+"customerName",
+DataViewRowState.CurrentRows);
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+namespace AdoNetConsoleApplication
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                string ConString = "data source=.; database=StudentDB; integrated security=SSPI";
+                using (SqlConnection connection = new SqlConnection(ConString))
+                {
+                    
+                    SqlDataAdapter da = new SqlDataAdapter("spGetStudents", connection);
+                    da.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        Console.WriteLine(row["Name"] +",  " + row["Email"] + ",  " + row["Mobile"]);
+                    }     
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("OOPs, something went wrong.\n" + e);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
+
+	DATA ACCESS TECHNOLOGY 
+		=====
+
+	a. ADO.NET		----> .NET FRAMEWORK
+
+	   ORM(OBJECT RELATIONAL MAPPING) FRAMEWORK
+	   OBJECT WORLD 	RELATIONAL WORLD 
+	
+	   OBJECT , COLLECTION ...ARRAY 
+	   RDBMS --SQL SERVER 
+	
+	b. LINQ TO SQL 		----> SQL SERVER 
+	c. ENTITY FRAMEWORK     ----> .NET FRAMEWORK 
+	d. EF CORE 		----> .NET CORE OR .NET SDK 
+
+	ADO.NET (ActiveX Data Object) .Net
+	==================================
+	
+	DATA ACCESS TECHNOLOGY 
+	----------------------
+	---WHICH HELPS TO PERFORM DATA MANIPULATIONS
+	BETWEEN APPLICATION(WEB , WINFORM(DESKTOP),CONSOLE)
+	AND DATABASE(SQL SERVER, MYSQL ,ORACLE)
+	
+	APPLICATION(mvc,winform or console)		DB TABLE (sql server ,oracle)
+				
+
+			==================>
+	APPLICATION	<===================
+
+			DATA MANIPULATIONS   CRUD 
+
+	REGISTER		DATA ACCESS
+				TECHNOLOGY
+	CUSTOMERID , NAME , 	---------->	CUSTOMER TABLE
+	EMAIL , CONTACT
+			DATA ACCESS TECHNOLOGY 
+			ADO.NET
+			LINQ TO SQL 			---ORM
+			ENTITY FRAMEWORK(.Net fw)	---ORM
+			ENTITY FRAMEWORK CORE(.Net core)---ORM
+	
+
+	DATA PROVIDERS
+						NameSpace
+	1. SQL SERVER DATA PROVIDER	----> SYSTEM.DATA.SQLCLIENT
+	2. ORACLE DATA PROVIDER		----> SYSTEM.ORACLE.ORACLECLIENT
+	3. OLEDB(OBJECT LINKING EMBEDDING)----> SYSTEM.DATA.OLEDB ---
+					ORACLE +SQL SERVER
+	4. ODBC				----> SYSTEM.DATA.ODBC   ---LEGACY DB
+
+
+	SYSTEM.DATA.SQLCLIENT
+	CLASSES 	+	METHODS		+ PROPERTIES
+
+	1. CONNECTION 		
+			HELPS TO IDENTIFY DB SERVER , USER-ID ,
+			Authentication Mode, PASSWORD ====> DB
+			ESTABLISHES CONNECTION BETWEEN APP && DB SERVER
+		
+		server=USBLRSANHB3 or data source=USBLRSANHB3
+		database=ProjectDB or Initial Catalog=ProjectDB
+		
+		Windows Authentication
+		-----------------------
+
+		Integrated Security=true
+		Trusted Connection=yes
+		
+	
+	2. COMMAND
+			PERFORMS SPECIFIC OPERATION(I U , D , S) 
+			CRUD(CREATE , READ , UPDATE , DELETE)
+			WITH DB SERVER TABLE
+			
+	3. DATAREADER
+
+		        USED FOR STORE DB TABLE DATA AFTER RETRIEVAL.
+
+			a. READ ONLY 	--- SELECT STATEMENT
+			--------------------------------- 
+			b. FORWARD ONLY 	--- SINGLE DIRECTION
+			------------------------------------
+			c. HOLD SINGLE TABLE DATA AT A TIME 
+			-------------------------------
+			CUSTOMER_TABLE---> CustomerDataReader 
+			PRODUCT_TABLE ---> ProductDataReader  , 
+			EMPLOYEE_TABLE ====> EmployeeDataReader 
+	
+	4. DATASET
+			IN MEMORY STORAGE FOR DATABASE TABLES DATA
+			a. ONE DATASET HOLD MULTIPLE TABLES DATA
+			-------------------------------------
+			CUSTOMER , PRODUCT , EMPLOYEE ====> 1 DATASET 
+			UPDATE..DELETE ...
+			
+			IT CONSIST OF COMPONENTS
+
+			a. DATATABLE + DATAROW + DATACOLUMN + DATARELATION =DATASET
+			b. DATAROW
+			c. DATACOLUMN
+			d. DATARELATION ---RELATION B/W 2 TABLES 
+			
+			DATATABLE --SINGLE TABLE ====> DATAROW + DATACOLUMN
+			
+			USED ONLY STORAGE , DOES NOT PERFORM ANY OPERATIONS DIRECTLY 
+			OR ON ITS OWN.
+			-------------------------------------------------------------
+			
+
+			DATAROW 	-- ROW DETAIL
+			DATACOLUMN	-- COLUMN DATA
+
+			DATARELATION    -- RELATION BETWEEN 2 TABLES
+			
+	5. DATAADAPTER
+			ACTS AS INTERMEDIATE BETWEEN DATASET AND DATABASE.
+			
+			IT RETREIVES DATA FROM DB AND COPY DATA TO DATASET.
+			
+			CUSTOMER ---> DATAADAPTER RETRIEVE CUSTOMER TABLE DATA
+				 ---> COPY TO DATASET ====> 
+			FILL()
+
+	CUSTOMER TABLE        =====> DATAADAPTER =======> DATASET (CUSTOMER)
+
+						  FILL() --PRE-DEFINED METHOD 
+
+	INSERT , UPDATE , DELETE ====> DATA-ADAPTER
+
+		COMMAND OBJECT 	+ DATAREADER		====> SELECT 
+
+		DATAADAPTER	+ DATASET		====> S , I , U , D ===DML
+
+	PARTICULAR ROW + COLUMN VALUE 	====> DATASET
+
+	METHODS
+	=======
+	EXECUTE SPECIFIC COMMANDS
+
+	1. EXECUTENONQUERY()		
+	====> INSERT,UPDATE , DELETE  
+
+	====> NO SELECT
+	
+	WHY ?????
+	RETURN TYPE --->EXECUTENONQUERY() INT 
+	SELECT * FROM EMPLOYEE
+				
+	2. EXECUTESCALAR()	        
+		
+		====> SELECT 	====> RETURN SINGLE VALUE
+					SPECFIC COLUMN VALUE ...COUNT(*)
+		EMPNAME FOR EMPID=101
+		TOTAL PRODUCT PURCHASED BY CUSTOMER-101
+
+	3. EXECUTEREADER()
+
+		 ====> ONLY SELECT 	
+		 ====> RETURN TYPE --DATAREADER
+		 ====> NO U , D , I ===> NO DML EXECUTION
+
+
+	CONNECTION OBJECT 
+	=================
+
+	OPEN()	  ===> OPEN DB CONNECTION		
+
+	CLOSE()   ===> CLOSE DB CONNECTION
+
+	USBLRSANHB3
+	
+	server
+
+	CBO_TrainingP2
+
+	Windows Authentication 	----> integrated security=true
+	
+	CustomerDAO	(DataAccessObject)
+
+	
+	INSERT 
+
+	STRING CONCATENATION 
+
+	SYNTAX 
+		====> VARCHAR 	''	 
+
+	int 	====> "+customerId+"
+
+	string  ====> '"+customerName+"'
+	Copy DataReader to List in C# ADO.NET
+
+	STORAGE 
+	
+	DATASET 	+	DATAADAPTER		====>
+				(SELECT)
+	DATAREADER	+	COMMAND			====>
+			    	(SELECT)
+
+
+
+	POINTS REMEMBER
+
+	DATASET && DATAADAPTER
+
+	1. NO NEED USE COMMAND OBJECT TO WRITE SQL QUERIES , DATAADAPTER CAN USED 
+	FOR SAME PURPOSE
+	2. DATAADAPTER FILL() ====> COPY DATA FROM DATAADAPTER TO DATASET 
+	3. NO NEED OPEN AND CLOSE CONNECTION OBJECT
+		????????
+	
+	ADO.NET 
+
+		SUPPORTS 
+			 CONNECTED 	ARCHITECTURE (command &  DataReader)
+			 DISCONNECTED 	ARCHITECTURE (DataSet,DataAdapter , 
+						      DataTable)	
+
+	
+	CONNECTED ARCHITECTURE
+	----------------------
+	CONNECTION BETWEEN APPLICATION && DB HAS TO BE MANUALLY OPEN AND CLOSE
+
+	DATAREADER 	&&	COMMMAND	====> CONNECTED ARCHITECTURE
+	COMMAND 	---> WRITE QUERIES
+
+	
+	DISCONNECTED ARCHITECTURE
+	-------------------------
+	NO NEED OPEN CONNECTION MANUALLY BETWEEN APPLICATION && DB 
+
+	DATASET		&&	DATAADAPTER	====> DISCONNECTED ARCHITECTURE
+
+	DATAADAPTER 	---> WRITE QUERIES
+
+	SEARCH(INT ID)
+	{
+		//RETURN CUSTOMER DETAILS
+	}
+
+	REMOVE(INT ID)
+	{
+
+	}
+
+	UPDATE()
+	{
+		//UPDATE CUSTOMER BY CUSTOMER-ID
+	}
+
+	
+	EMPLOYEE_TABLE
+
+	EMPID   NAME   EMAIL    LOCATION    SALARY 
+
+	101    E1      E1-1      L1         10000
+
+	102    E2      E2-1      L12         20000
+	
+	Select * from Employee_Table 
+	
+	1 DataSet  --Employee_Table 
+
+		     DataAdapter --(Select * from Employee_Table)
+		     Select , Update , Delete , Insert 
+	DataSet	     ----------->   Employee_Table (ProjectDB) 
+
+	a. First create DataAdapter Object and store data into DataAdapter
+
+	b. Copy data from DataAdapter to DataSet or DataTable object 
+
+		-----> Fill() method 
+
+		
+	IS A		----> INHERITANCE
+
+	HAS A	
+
+	Account	  BC
+
+	Bank	  DC
+
+	Bank : Account		---->NOT IS A RELATIONSHIP 	
+	
+
+	Account : Savings     ----> WRONG 
+
+	Savings : Account     -----> CORRECT
+
+	Account DC
+
+	Savings : BC 
+
+
+	Exception
+
+	IndexOutOfRangeException
+	
+	class NoSuchProductFoundException    ====> Custom Exception Class
+
+	{
+	
+	Exception   ======> Predefined Exception Class
+
+	ProductExceptionMessage		===> Custom Exception Property
+
+	Message				===> Predefined Exception Property
+
+	}
+
+	try
+	catch(NoSuchProductFoundException ex)
+	{
+		cw(ex.ProductExceptionMessage);
+	}
+
+
+	string 
+
+	'"+empName+"'
+	
+	int or double or long ------>
+	"+empId+"
+
+	TrustedServer
+
+	public int DeleteEmployee(int id)
+	{
+
+	}
+	public void UpdateEmployee(int id)
+	{
+
+		By EmpId update Emailid and Salary 
+
+		
+	}
+
+	EmployeeDAO    ----.cs file 
+
+	Print EmployeeTables Records    ---Right Choice
+
+	EmployeePage 
+		Front End -
+	Print Employee Records ----> MVC View(UI Page)  or Html Page --Table 
+
+	No UI 	----Program.cs ---> 
+
+	ShowEmployees() 
+
+		Return EmployeeTable Records
+
+
+	Program.cs      ----Front end or UI
+
+		Print Employee Details 
+
+	
+
+	Front End Code 				    Back End Code 
+
+	UI or Web Pages (Html)			    C# Code 
+
+	Program.cs				    Employee.cs  + EmployeeDAO.cs
+
+	Sending data from FrontEnd ----> Back End---->Save or reflectin  DB Table 
+	
+	Register
+
+	Getting data from BackEnd  -----> FrontEnd 
+
+	Retrieve data or SELECT statement 
+
+	
+	CustomerTable
+
+	Id   Name  Location ContactNumber  EmailId payment
+
+	A. Register Customer
+
+		public int RegisterCustomer(string name,string location,long contact,
+					    string email)			
+
+		public int RegisterCustomer(Customer customer)
+
+	B. Update Customer 
+
+		public bool UpdateCustomer(int id,Customer customer)
+		{
+			//cw("Customer Updated");
+		}
+		C# Code --Update Record to Db Table(CustomerTable)
+
+	C. Delete Customer 
+
+		public int DeleteCustomer(int id)
+		{
+
+			Front End to Back end and 
+			reflect changes to DB Table(1 row Deleted)
+		}
+
+	D. Print All Customer Details
+
+		public List<Customer> GetAllCustomer()
+		{
+
+		Back End to  Front End 
+		Get All Customer Rows -Convert to List and return List to Front End
+			convert DataSet or DataTable object to List return List
+
+			//Adapter Object   ----Only for Interaction not for data storage
+		}
+
+	E. Search for Particular Customer  
+
+		public Customer Search(int id)
+		{
+
+			Front End  --Back End 		---Id input 
+			Back End   -- Front End 	--- Customer Row from convert row to
+							Customer Object and return Customer Object 
+
+		}
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+	
+
+
+
+	
+
+
+
+
+	
+
+			
+	
+							
+			
+			
+
+		
+		
+
+	
+			
